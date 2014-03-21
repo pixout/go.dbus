@@ -54,8 +54,18 @@ func (conn *Conn) Auth(methods []Auth) error {
 	if methods == nil {
 		u, err := user.Current()
 		if err != nil {
-			return err
-		}
+                    //return err
+                    //Go doesn't have such implementation, so we need to fix it
+                    err = nil
+                    u = &user.User{
+                    Uid:      "0",
+                    Gid:      "0",
+                    Username: "root",
+                    Name:     "root",
+                    HomeDir:  "/root",
+                    }
+	
+		} 
 		methods = []Auth{AuthExternal(u.Username), AuthCookieSha1(u.Username, u.HomeDir)}
 	}
 	in := bufio.NewReader(conn.transport)
